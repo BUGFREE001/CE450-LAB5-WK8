@@ -1,0 +1,368 @@
+
+#2
+
+#include<reg52.h>
+#define uchar unsigned char
+#define uint unsigned int
+
+uchar code table[]="hi! you did a good job!";
+sbit lcdEN=P2^2; 
+sbit lcdRW=P2^1;
+sbit lcdRS=P2^0;
+uchar n;
+int s = (sizeof(table)/sizeof(uchar))-1;
+
+void delay(uchar z)
+{
+	uchar x,y;
+	for(x=z;x>0;x--)
+	for(y=415;y>0;y--);
+}
+void writeCmd(uchar cmd)
+{
+	lcdRS=0; 
+	P1=cmd; 
+	delay(5);
+	lcdEN=1; 
+	delay(4);
+	lcdEN=0;
+}
+void writeData(uchar D)
+{
+	lcdRS=1; 
+	P1=D;
+	delay(5);
+	lcdEN=1;
+	delay(4);
+	lcdEN=0;
+}
+void init()
+{
+	lcdEN=0; 
+	writeCmd(0x38); 
+	writeCmd(0x0c); 
+	writeCmd(0x06); 
+	writeCmd(0x01); 
+}
+void main()
+{
+	lcdRW=0;
+	init();
+	while(1) {
+	writeCmd(0x80); 
+	for(n=0;n<s;n++){
+		writeData(table[n]);
+		delay(50);
+	}
+	writeCmd(0x07);
+ }	
+}
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+#3
+
+#include <REG52.H> 
+#include <intrins.h>
+#define uint unsigned int 
+#define uchar unsigned char 
+
+sbit lcdRS=P3^2;
+sbit lcdRW=P3^3;
+sbit lcdEN=P3^4;
+
+void delay(uint z){ 
+    uint x, y;
+    for (x = z; x > 0; x--){
+        for (y = 415; y > 0; y--);
+    }
+}
+void writeCmd(uchar cmd)
+{
+    lcdRS=0; 
+    P1=cmd;
+    delay(5);
+    lcdEN=1; 
+    delay(4);
+    lcdEN=0;
+}
+void writeData(uchar D)
+{
+    lcdRS=1; 
+    P1=D;
+    delay(5);
+    lcdEN=1;
+    delay(4);
+    lcdEN=0;
+}
+void init()
+{
+    lcdEN=0;
+    writeCmd(0x38); 
+    writeCmd(0x0c); 
+    writeCmd(0x06); 
+    writeCmd(0x01);
+}
+void main() {
+    uchar temp;
+	lcdRW=0; 
+    init();
+    while (1) {
+        P2 = 0xFE; 
+        temp = P2; 
+        temp = temp & 0xF0; 
+        if (temp == 0x70) {
+            delay(20);  
+            temp = P2; 
+            if (temp == 0x70){
+                while ((P2 & 0xF0) == 0x70); 
+                writeData('1'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xB0) {
+            delay(20);  
+            temp = P2;
+            temp = temp & 0xF0;
+            if (temp == 0xB0){
+                while ((P2 & 0xF0) == 0xB0);
+                writeData('5'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xD0){
+            delay(20);
+            temp = P2;
+            temp = temp & 0xF0;
+            if (temp == 0xD0){
+                while ((P2 & 0xF0) == 0xD0); 
+                writeData('9');
+                delay(5);
+            }
+        }
+        if (temp == 0xE0) {
+            delay(20); 
+            temp = P2;
+            temp = temp & 0xF0;
+            if (temp == 0xE0){
+                while ((P2 & 0xF0) == 0xE0); 
+                writeData('c'); //Display Key C 
+                delay(5);
+            }
+        }
+        
+        P2 = 0xFD; 
+        temp = P2;
+        temp = temp & 0xF0; 
+        if (temp == 0x70){
+            delay(20);  
+            temp = P2;
+            temp = temp & 0xF0;
+            if (temp == 0x70){
+                while ((P2 & 0xF0) == 0x70);
+                writeData('2');  
+                delay(5);
+            }
+        }
+        if (temp == 0xB0){
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xB0){
+                while ((P2 & 0xF0) == 0xB0);
+                writeData('6'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xD0){
+            delay(20);  
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xD0){
+                while ((P2 & 0xF0) == 0xD0);  
+                writeData('0');
+                delay(5);
+            }
+        }
+        if (temp == 0xE0) {
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xE0){
+                while ((P2 & 0xF0) == 0xE0);
+                writeData('d'); 
+                delay(5);
+            }
+        }
+        
+        P2 = 0xFB;  
+        temp = P2; 
+        temp = temp & 0xF0;
+        if (temp == 0x70) {
+            delay(20);
+            temp = P2;
+            temp = temp & 0xF0;
+            if (temp == 0x70) {
+                while ((P2 & 0xF0) == 0x70);
+                writeData('3');
+                delay(5);
+            }
+        }
+        if (temp == 0xB0){
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xB0) {
+                while ((P2 & 0xF0) == 0xB0);  
+                writeData('7'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xD0){
+            delay(20);  
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xD0) {
+                while ((P2 & 0xF0) == 0xD0); 
+                writeData('a');
+                delay(5);
+            }
+        }
+        if (temp == 0xE0){
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xE0) {
+                while ((P2 & 0xF0) == 0xE0); 
+                writeData('e'); 
+                delay(5);
+            }
+        }
+       
+        P2 = 0xF7; 
+        temp = P2;
+        temp = temp & 0xF0; 
+        if (temp == 0x70){
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0x70) {
+                while ((P2 & 0xF0) == 0x70); 
+								writeData('4'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xB0) {
+            delay(20);
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xB0) {
+                while ((P2 & 0xF0) == 0xB0); 
+                writeData('8'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xD0) {
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xD0) {
+                while ((P2 & 0xF0) == 0xD0); 
+                writeData('b'); 
+                delay(5);
+            }
+        }
+        if (temp == 0xE0){
+            delay(20); 
+            temp = P2; 
+            temp = temp & 0xF0;
+            if (temp == 0xE0) {
+                while ((P2 & 0xF0) == 0xE0);
+								writeData('f'); 
+								writeCmd(0x14);
+                delay(5);
+            }
+        }
+				writeCmd(0x80);
+    }
+}
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+#5
+
+
+#include<reg52.h>
+#define uchar unsigned char
+#define uint unsigned int
+
+uchar code line1[]="User Def. Font";
+uchar i; 
+sbit lcdRS=P3^2;
+sbit lcdRW=P3^3; 
+sbit lcdEN=P3^4;
+uchar code NewFont[]={0x06,0x09,0x1E,0x08,0x1E,0x09,0x06,0x00}; 
+
+void delay(uint z)
+{
+uint x,y;
+for(x=z;x>0;x--) 
+for(y=110;y>0;y--);
+}
+
+void writeCmd(uchar cmd)
+{
+lcdRS=0;
+P1=cmd; 
+delay(5);
+lcdEN=1; 
+delay(4);
+lcdEN=0;
+}
+
+void writeData(uchar D)
+{
+lcdRS=1; 
+P1=D;
+delay(5);
+lcdEN=1;
+delay(4);
+lcdEN=0;
+}
+
+void init()
+{
+lcdEN=0;
+writeCmd(0x38); 
+writeCmd(0x0c); 
+writeCmd(0x06);
+writeCmd(0x01); 
+}
+
+void main()
+{
+lcdRW=0; 
+init();
+for(i=0;i<14;i++) { 
+writeCmd(0x80+i); 
+writeData(line1[i]); 
+delay(5);
+}
+for(i=0; i<10; i++){
+writeCmd(0x40+0x08+i); 
+writeData(NewFont[i]); 
+}
+writeCmd(0x80+0x40); 
+writeData(0x01); 
+while(1);
+}
